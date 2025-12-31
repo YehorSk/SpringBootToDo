@@ -1,7 +1,13 @@
 package com.yehorsk.todotest
 
+import com.yehorsk.todotest.service.ToDoService
+import com.yehorsk.todotest.service.model.ToDoDto
+import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -15,23 +21,33 @@ class ToDoController(
 ) {
 
     @GetMapping
-    fun loadToDos(): List<ToDoDto> {
-        return toDoService.getAll()
+    fun loadToDos(): ResponseEntity<List<ToDoDto>> {
+        val todos = toDoService.getAll()
+        return ResponseEntity
+            .ok()
+            .body(todos)
     }
 
     @PostMapping
-    fun saveToDo(@RequestBody toDoDto: ToDoDto): ToDoDto{
-        return toDoService.saveToDo(toDoDto)
+    fun saveToDo(@Valid @RequestBody toDoDto: ToDoDto): ResponseEntity<ToDoDto> {
+        val todo = toDoService.saveToDo(toDoDto)
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .body(todo)
     }
 
-    @PutMapping
-    fun updateToDo(@RequestBody toDoDto: ToDoDto): ToDoDto{
-        return toDoService.updateToDo(toDoDto)
+    @PutMapping("/{id}")
+    fun updateToDo(@PathVariable id: Long, @Valid @RequestBody toDoDto: ToDoDto): ResponseEntity<ToDoDto> {
+        val todo = toDoService.updateToDo(id, toDoDto)
+        return ResponseEntity.ok(todo)
     }
 
-    @DeleteMapping
-    fun deleteToDo(@RequestBody toDoDto: ToDoDto){
-        toDoService.deleteToDo(toDoDto)
+    @DeleteMapping("/{id}")
+    fun deleteToDo(@PathVariable id: Long): ResponseEntity<Unit>{
+        toDoService.deleteToDo(id)
+        return ResponseEntity
+            .noContent()
+            .build()
     }
 
 }

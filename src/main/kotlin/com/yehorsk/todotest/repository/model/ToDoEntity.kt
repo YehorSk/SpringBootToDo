@@ -1,4 +1,4 @@
-package com.yehorsk.todotest
+package com.yehorsk.todotest.repository.model
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -12,9 +12,6 @@ data class ToDoEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     val id: Long? = null,
-    val name: String,
-    val description: String
-){
-    override fun toString(): String =
-        "Name: $name, Description: $description"
-}
+    val name: String = "",
+    val description: String = ""
+)
