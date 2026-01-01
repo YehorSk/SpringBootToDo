@@ -1,5 +1,6 @@
 package com.yehorsk.todotest.service
 
+import com.yehorsk.todotest.exceptions.ToDoNotFoundException
 import com.yehorsk.todotest.service.model.ToDoDto
 import com.yehorsk.todotest.repository.ToDoRepository
 import com.yehorsk.todotest.toToDoDto
@@ -15,6 +16,13 @@ class ToDoService(
         return toDoRepository.findAll().map { it.toToDoDto() }
     }
 
+    fun getToDoById(id: Long): ToDoDto {
+        val todo = toDoRepository.findById(id)
+            .orElseThrow{ throw ToDoNotFoundException(id)}
+        return todo.toToDoDto()
+    }
+
+
     fun saveToDo(toDoDto: ToDoDto): ToDoDto {
         val newToDo = toDoRepository.save(toDoDto.toToDoEntity())
         return newToDo.toToDoDto()
@@ -22,7 +30,7 @@ class ToDoService(
 
     fun updateToDo(id: Long, toDoDto: ToDoDto): ToDoDto {
         val existing = toDoRepository.findById(id)
-            .orElseThrow{ NoSuchElementException("ToDo not found!") }
+            .orElseThrow{ ToDoNotFoundException(id) }
         val updated = existing.copy(
             name = toDoDto.name,
             description = toDoDto.description
@@ -33,7 +41,7 @@ class ToDoService(
 
     fun deleteToDo(id: Long) {
         toDoRepository.findById(id)
-            .orElseThrow{ NoSuchElementException("ToDo not found!") }
+            .orElseThrow{ ToDoNotFoundException(id) }
         toDoRepository.deleteById(id)
     }
 

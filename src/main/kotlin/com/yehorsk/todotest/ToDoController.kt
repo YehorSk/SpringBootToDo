@@ -28,6 +28,12 @@ class ToDoController(
             .body(todos)
     }
 
+    @GetMapping("/{id}")
+    fun getToDoById(@PathVariable id: Long): ResponseEntity<ToDoDto> {
+        val todo = toDoService.getToDoById(id)
+        return ResponseEntity.ok(todo)
+    }
+
     @PostMapping
     fun saveToDo(@Valid @RequestBody toDoDto: ToDoDto): ResponseEntity<ToDoDto> {
         val todo = toDoService.saveToDo(toDoDto)
