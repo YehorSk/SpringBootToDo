@@ -1,27 +1,28 @@
 package com.yehorsk.todotest.repository.model
 
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "todos")
-class ToDoEntity(
+@Table(name = "sub_tasks")
+class SubTaskEntity(
+    var description: String = "",
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-    var description: String = "",
     @Column(nullable = false)
     var name: String = "",
-    @OneToMany(
-        mappedBy = "todo",
-        cascade = [CascadeType.ALL],
-        orphanRemoval = true
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+    name = "todo_id",
+    referencedColumnName = "id"
     )
-    var subTasks: MutableSet<SubTaskEntity> = mutableSetOf()
+    var todo: ToDoEntity? = null
 )

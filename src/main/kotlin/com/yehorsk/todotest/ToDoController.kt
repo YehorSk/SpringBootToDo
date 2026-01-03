@@ -1,10 +1,10 @@
 package com.yehorsk.todotest
 
+import com.yehorsk.todotest.exceptions.Response
 import com.yehorsk.todotest.service.ToDoService
+import com.yehorsk.todotest.service.model.CreateToDoDto
 import com.yehorsk.todotest.service.model.ToDoDto
 import jakarta.validation.Valid
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,39 +21,45 @@ class ToDoController(
 ) {
 
     @GetMapping
-    fun loadToDos(): ResponseEntity<List<ToDoDto>> {
+    fun loadToDos(): Response<List<ToDoDto>> {
         val todos = toDoService.getAll()
-        return ResponseEntity
-            .ok()
-            .body(todos)
+        return Response(
+            data = todos,
+        )
     }
 
     @GetMapping("/{id}")
-    fun getToDoById(@PathVariable id: Long): ResponseEntity<ToDoDto> {
+    fun getToDoById(@PathVariable id: Long): Response<ToDoDto> {
         val todo = toDoService.getToDoById(id)
-        return ResponseEntity.ok(todo)
+        return Response(
+            data = todo,
+        )
     }
 
     @PostMapping
-    fun saveToDo(@Valid @RequestBody toDoDto: ToDoDto): ResponseEntity<ToDoDto> {
+    fun saveToDo(@Valid @RequestBody toDoDto: CreateToDoDto): Response<ToDoDto> {
         val todo = toDoService.saveToDo(toDoDto)
-        return ResponseEntity
-            .status(HttpStatus.CREATED)
-            .body(todo)
+        return Response(
+            data = todo,
+            status = 201
+        )
     }
 
     @PutMapping("/{id}")
-    fun updateToDo(@PathVariable id: Long, @Valid @RequestBody toDoDto: ToDoDto): ResponseEntity<ToDoDto> {
+    fun updateToDo(@PathVariable id: Long, @Valid @RequestBody toDoDto: ToDoDto): Response<ToDoDto> {
         val todo = toDoService.updateToDo(id, toDoDto)
-        return ResponseEntity.ok(todo)
+        return Response(
+            data = todo,
+            status = 200
+        )
     }
 
     @DeleteMapping("/{id}")
-    fun deleteToDo(@PathVariable id: Long): ResponseEntity<Unit>{
+    fun deleteToDo(@PathVariable id: Long): Response<Unit>{
         toDoService.deleteToDo(id)
-        return ResponseEntity
-            .noContent()
-            .build()
+        return Response(
+            message = "Deleted Successfully"
+        )
     }
 
 }

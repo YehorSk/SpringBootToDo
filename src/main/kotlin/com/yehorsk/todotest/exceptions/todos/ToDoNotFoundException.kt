@@ -1,4 +1,4 @@
-package com.yehorsk.todotest.exceptions
+package com.yehorsk.todotest.exceptions.todos
 
 class ToDoNotFoundException(
     id: Long

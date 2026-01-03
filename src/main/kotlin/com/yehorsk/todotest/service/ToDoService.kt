@@ -1,15 +1,17 @@
 package com.yehorsk.todotest.service
 
-import com.yehorsk.todotest.exceptions.ToDoNotFoundException
+import com.yehorsk.todotest.exceptions.todos.ToDoNotFoundException
 import com.yehorsk.todotest.service.model.ToDoDto
 import com.yehorsk.todotest.repository.ToDoRepository
+import com.yehorsk.todotest.service.model.CreateToDoDto
 import com.yehorsk.todotest.toToDoDto
 import com.yehorsk.todotest.toToDoEntity
 import org.springframework.stereotype.Service
 
 @Service
 class ToDoService(
-    private val toDoRepository: ToDoRepository
+    private val toDoRepository: ToDoRepository,
+    private val subTaskService: SubTaskService
 ) {
 
     fun getAll(): List<ToDoDto> {
@@ -22,20 +24,20 @@ class ToDoService(
         return todo.toToDoDto()
     }
 
-
-    fun saveToDo(toDoDto: ToDoDto): ToDoDto {
-        val newToDo = toDoRepository.save(toDoDto.toToDoEntity())
+    fun saveToDo(request: CreateToDoDto): ToDoDto {
+        val newToDo = toDoRepository.save(request.toToDoEntity())
+        request.subTasks.forEach { task ->
+            subTaskService.saveSubTask(task, newToDo.id!!)
+        }
         return newToDo.toToDoDto()
     }
 
     fun updateToDo(id: Long, toDoDto: ToDoDto): ToDoDto {
         val existing = toDoRepository.findById(id)
             .orElseThrow{ ToDoNotFoundException(id) }
-        val updated = existing.copy(
-            name = toDoDto.name,
-            description = toDoDto.description
-        )
-        val newToDo = toDoRepository.save(updated)
+        existing.name = toDoDto.name
+        existing.description = toDoDto.description
+        val newToDo = toDoRepository.save(existing)
         return newToDo.toToDoDto()
     }
 
