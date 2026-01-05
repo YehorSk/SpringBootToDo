@@ -1,4 +1,4 @@
-package com.yehorsk.todotest.exceptions.todos
+package com.yehorsk.todotest.todos.exceptions
 
 import com.yehorsk.todotest.exceptions.Response
 import org.springframework.http.HttpStatus

@@ -1,10 +1,10 @@
-package com.yehorsk.todotest
+package com.yehorsk.todotest.todos
 
-import com.yehorsk.todotest.repository.model.SubTaskEntity
-import com.yehorsk.todotest.repository.model.ToDoEntity
-import com.yehorsk.todotest.service.model.CreateToDoDto
-import com.yehorsk.todotest.service.model.SubTaskDto
-import com.yehorsk.todotest.service.model.ToDoDto
+import com.yehorsk.todotest.subtasks.repository.entitities.SubTaskEntity
+import com.yehorsk.todotest.todos.repository.entities.ToDoEntity
+import com.yehorsk.todotest.subtasks.service.dtos.responses.SubTaskDto
+import com.yehorsk.todotest.todos.service.dtos.requests.CreateToDoDto
+import com.yehorsk.todotest.todos.service.dtos.responses.ToDoDto
 
 fun ToDoEntity.toToDoDto() = ToDoDto(
     id = this.id,
